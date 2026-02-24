@@ -1,4 +1,4 @@
-# PostPilot
+# Postly
 
 From idea to LinkedIn — on autopilot.
 
