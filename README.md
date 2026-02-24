@@ -6,7 +6,7 @@ A Telegram bot that researches topics, writes viral LinkedIn posts, generates ma
 
 ---
 
-## How It Works
+## ⚡ How It Works
 
 ```
 You send a topic
@@ -23,7 +23,7 @@ No auto-posting. You copy-paste to LinkedIn on your own terms.
 
 ---
 
-## Architecture
+## 🏗 Architecture
 
 ```
 main.py          Telegram bot + scheduler (entry point)
@@ -46,7 +46,7 @@ The main agent delegates automatically via the `Task` tool. Subagents are pure t
 
 ---
 
-## Workflows
+## 🔄 Workflows
 
 ### Workflow 1: On-Demand
 
@@ -73,7 +73,7 @@ Runs automatically via APScheduler:
 
 ---
 
-## Stack
+## 🧱 Stack
 
 | Component | Technology |
 |-----------|-----------|
@@ -85,7 +85,7 @@ Runs automatically via APScheduler:
 
 ---
 
-## Setup
+## 🚀 Setup
 
 ### Prerequisites
 
@@ -141,7 +141,7 @@ Open your Telegram bot and send a topic to start.
 
 ---
 
-## Switching Image Models
+## 🎨 Switching Image Models
 
 Change `REPLICATE_MODEL` in `.env` without touching code:
 
@@ -153,7 +153,7 @@ REPLICATE_MODEL=black-forest-labs/flux-pro         # best quality
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 PostPilot/
@@ -171,12 +171,12 @@ PostPilot/
 
 ---
 
-## License
+## 🪄 License
 
 This project is licensed under the MIT License.
 You are free to use, modify, and distribute this software with attribution. See the [LICENSE](LICENSE) file for full details.
 
-## Author
+## 👤 Author
 
 **Krish Batra**
 - Website: [vybecode.in](https://vybecode.in)
