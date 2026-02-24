@@ -3,6 +3,7 @@ from io import BytesIO
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from agent import run_agent
 from tools import generate_image
 from state import load, save
@@ -55,11 +56,44 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(display_text[i : i + 4096])
 
 
+async def weekly_trigger(app):
+    """Workflow 2 — fires every Monday 9am. Sends trending AI topics to user."""
+    chat_id = int(os.getenv("TELEGRAM_CHAT_ID", "0"))
+    if not chat_id:
+        print("⚠️ TELEGRAM_CHAT_ID not set — skipping weekly trigger.")
+        return
+
+    state = load(chat_id)
+    history = state.get("history", [])
+
+    response, _ = await run_agent(
+        "Run Workflow 2: find 6 trending AI topics from the past 7 days.",
+        history,
+    )
+
+    # Send response — split long messages
+    for i in range(0, len(response), 4096):
+        await app.bot.send_message(chat_id=chat_id, text=response[i : i + 4096])
+
+    # Save to history
+    history.append({"role": "user", "content": "Run Workflow 2"})
+    history.append({"role": "assistant", "content": response})
+    state["history"] = history[-20:]
+    save(chat_id, state)
+
+
 def main():
-    """Start the Telegram bot."""
+    """Start the Telegram bot with weekly scheduler."""
     app = ApplicationBuilder().token(os.getenv("TELEGRAM_BOT_TOKEN")).build()
     app.add_handler(MessageHandler(filters.ALL, handle_message))
+
+    # Schedule Workflow 2: every Monday at 9am
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(weekly_trigger, "cron", day_of_week="mon", hour=9, args=[app])
+    scheduler.start()
     print("🤖 PostPilot is running...")
+    print("📅 Weekly trigger scheduled: every Monday at 9am")
+
     app.run_polling()
 
 
